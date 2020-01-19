@@ -39,6 +39,18 @@ void setup()
 
 void loop()
 {
+
+  if (sensorValue < 100)
+  {
+    digitalWrite(led2, LOW);
+    Serial.println("LED 2 ligado, luminosidade do ambiente estava baixa!");
+  }
+  else
+  {
+    digitalWrite(led2, HIGH);
+    Serial.println("LED 2 desligado, luminosidade do ambiente estava alta!");
+  }
+  
   sensorValue=analogRead(LDRPin);   //read  the value of the photoresistor.
   Serial.println(sensorValue);  // value of the photoresistor to the serial monitor.
   
@@ -61,16 +73,16 @@ void loop()
       digitalWrite(led1, HIGH);
       myBot.sendMessage(msg.sender.id, "LED 1 Apagado!");
     }
-    else if (msg.text.equalsIgnoreCase("LIGA 2"))
-    {
-      digitalWrite(led2, LOW);
-      myBot.sendMessage(msg.sender.id, "LED 2 Aceso!");
-    }
-    else if (msg.text.equalsIgnoreCase("DESLIGA 2"))
-    {
-      digitalWrite(led2, HIGH);
-      myBot.sendMessage(msg.sender.id, "LED 2 Apagado!");
-    }
+//    else if (msg.text.equalsIgnoreCase("LIGA 2"))
+//    {
+//      digitalWrite(led2, LOW);
+//      myBot.sendMessage(msg.sender.id, "LED 2 Aceso!");
+//    }
+//    else if (msg.text.equalsIgnoreCase("DESLIGA 2"))
+//    {
+//      digitalWrite(led2, HIGH);
+//      myBot.sendMessage(msg.sender.id, "LED 2 Apagado!");
+//    }
     else if (sensorValue < 100 and msg.text.equalsIgnoreCase("Luminosidade"))
     {
       digitalWrite(led2, LOW);
@@ -86,9 +98,9 @@ void loop()
       //Caso receba qualquer outro comando, envia uma
       //mensagem generica/informativa
       String reply;
-      reply = "Desculpe, não entendi. \n\nSegue a lista de comandos que consigo entender: \nLiga 1- Para ligar led 1 \nDesliga 1 - Para desligar led 1 \nLiga 2- Para ligar led 2 \nDesliga 2 - Para desligar led 2 \nLuminosidade - Para checar luminosidade do ambiente e acender ou não o led 2.";
+      reply = "Desculpe, não entendi. \n\nSegue a lista de comandos que consigo entender: \nLiga 1- Para ligar led 1 \nDesliga 1 - Para desligar led 1 \nLuminosidade - Para checar luminosidade do ambiente e acender ou não o led 2.";
       myBot.sendMessage(msg.sender.id, reply);
     }
   }
-  delay(200);
+  delay(1000);
 }
