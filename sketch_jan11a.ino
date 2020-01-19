@@ -1,6 +1,3 @@
-//Programa: Bot Telegram com ESP8266 NodeMCU
-//Autor: Arduino e Cia
-
 #include "CTBot.h"
 
 CTBot myBot;
@@ -13,6 +10,8 @@ String token = "937555706:AAE_N4SomQHEjN6bXsyNw5QDIE_twOY5LoM"; //Token bot Tele
 //Pinos dos leds
 uint8_t led1 = D4;
 uint8_t led2 = D3;
+int LDRPin = A0; 
+int sensorValue=0;
 
 void setup()
 {
@@ -40,6 +39,9 @@ void setup()
 
 void loop()
 {
+  sensorValue=analogRead(LDRPin);   //read  the value of the photoresistor.
+  Serial.println(sensorValue);  // value of the photoresistor to the serial monitor.
+  
   //Variavel que armazena a mensagem recebida
   TBMessage msg;
 
@@ -69,14 +71,24 @@ void loop()
       digitalWrite(led2, HIGH);
       myBot.sendMessage(msg.sender.id, "LED 2 Apagado!");
     }
+    else if (sensorValue < 100 and msg.text.equalsIgnoreCase("Luminosidade"))
+    {
+      digitalWrite(led2, LOW);
+      myBot.sendMessage(msg.sender.id, "LED 2 ligado, luminosidade do ambiente estava baixa!");
+    }
+    else if(sensorValue > 100 and msg.text.equalsIgnoreCase("Luminosidade"))
+    {
+      digitalWrite(led2, HIGH);
+      myBot.sendMessage(msg.sender.id, "LED 2 desligado, luminosidade do ambiente estava alta!");
+    }
     else
     {
       //Caso receba qualquer outro comando, envia uma
       //mensagem generica/informativa
       String reply;
-      reply = "Não entendi :/";
+      reply = "Desculpe, não entendi. \n\nSegue a lista de comandos que consigo entender: \nLiga 1- Para ligar led 1 \nDesliga 1 - Para desligar led 1 \nLiga 2- Para ligar led 2 \nDesliga 2 - Para desligar led 2 \nLuminosidade - Para checar luminosidade do ambiente e acender ou não o led 2.";
       myBot.sendMessage(msg.sender.id, reply);
     }
   }
-  delay(500);
+  delay(200);
 }
