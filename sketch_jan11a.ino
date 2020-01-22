@@ -40,25 +40,12 @@ void setup()
 
 void loop()
 {
-
-  if (sensorValue < 20 and varAux == 0)
-  {
-    digitalWrite(led2, LOW);
-    Serial.println("Led vermelho ligado, luminosidade do ambiente estava baixa!");
-    varAux = 1;
-  }
-  else if(sensorValue > 20 and varAux == 1)
-  {
-    digitalWrite(led2, HIGH);
-    Serial.println("Led vermelho desligado, luminosidade do ambiente estava alta!");
-    varAux = 0;
-  }
-  
+  TBMessage msg;  
   sensorValue=analogRead(LDRPin);   //read  the value of the photoresistor.
   Serial.println(sensorValue);  // value of the photoresistor to the serial monitor.
   
   //Variavel que armazena a mensagem recebida
-  TBMessage msg;
+  // TBMessage msg;
   //Verifica se chegou alguma mensagem
   if (myBot.getNewMessage(msg))
   {
@@ -88,12 +75,12 @@ void loop()
     else if (sensorValue < 20 and msg.text.equalsIgnoreCase("Luminosidade"))
     {
       digitalWrite(led2, LOW);
-      myBot.sendMessage(msg.sender.id, (String)"Led vermelho ligado, luminosidade do ambiente esta em "+sensorValue+(String)", considerada baixa!");
+      myBot.sendMessage(msg.sender.id, "Led vermelho ligado, luminosidade do ambiente está baixa!");
     }
     else if(sensorValue > 20 and msg.text.equalsIgnoreCase("Luminosidade"))
     {
       digitalWrite(led2, HIGH);
-      myBot.sendMessage(msg.sender.id, (String)"Led vermelho desligado, luminosidade do ambiente está em "+sensorValue+(String)", considerada alta!");
+      myBot.sendMessage(msg.sender.id, "Led vermelho desligado, luminosidade do ambiente está alta!");
     }
     else
     {
@@ -103,6 +90,21 @@ void loop()
       reply = "Desculpe, não entendi. \n\nSegue a lista de comandos que consigo entender: \n\nLigar led verde - Para ligar led verde \n\nDesligar led verde - Para desligar led verde \n\nLuminosidade - Para checar luminosidade do ambiente e acender ou não o led vermelho.";
       myBot.sendMessage(msg.sender.id, reply);
     }
+  }
+
+  if (sensorValue < 20 and varAux == 0)
+  {
+    digitalWrite(led2, LOW);
+    Serial.println("Led vermelho ligado, luminosidade do ambiente estava baixa!");
+    myBot.sendMessage(msg.sender.id, "Led vermelho ligado, luminosidade do ambiente está baixa!");
+    varAux = 1;
+  }
+  else if(sensorValue > 20 and varAux == 1)
+  {
+    digitalWrite(led2, HIGH);
+    Serial.println("Led vermelho desligado, luminosidade do ambiente estava alta!");
+    myBot.sendMessage(msg.sender.id, "Led vermelho desligado, luminosidade do ambiente está alta!");
+    varAux = 0;
   }
   delay(1000);
 }
